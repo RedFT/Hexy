@@ -1,7 +1,7 @@
 import numpy as np
 
-hex_to_pixel_mat = np.array([[np.sqrt(3), np.sqrt(3) / 2], [0, 3 / 2.]])
-pixel_to_hex_mat = np.array([[np.sqrt(3) / 3, -1. / 3], [0, 2 / 3.]])
+hex_to_pixel_mat = np.array([[np.sqrt(3), np.sqrt(3)/2], [0, 3/2.]])
+pixel_to_hex_mat = np.array([[np.sqrt(3)/3,      -1./3], [0, 2/3.]])
 
 
 def deg_to_rad(deg):
@@ -15,6 +15,34 @@ class DIR:
     NW = np.array((-1, 0, 1))
     NE = np.array((0, -1, 1))
     E = np.array((1, -1, 0))
+    ALL=np.array([NW,NE,E,SE,SW,W,])
+
+
+def get_neighbor(hex, direction):
+    return hex + direction
+
+
+def get_ring(center, radius):
+    if radius < 0:
+        return []
+    if radius == 0:
+        return [center]
+
+    rad_hex = np.zeros((6*radius, 3))
+    count = 0
+    for i in range(0, 6):
+        for k in range(0, radius):
+            rad_hex[count] = DIR.ALL[i-1] * (radius-k) + DIR.ALL[i] * (k)
+            count += 1
+
+    return np.squeeze(rad_hex) + center.astype(int)
+
+
+def get_area(center, radius):
+    hex_area = get_ring(center, 0)
+    for i in range(1, radius + 1):
+        hex_area=np.append(hex_area, get_ring(center, i), axis=0)
+    return hex_area
 
 
 def cube_to_axial(cube):
