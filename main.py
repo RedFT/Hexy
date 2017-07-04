@@ -39,7 +39,8 @@ def get_coords(low_bound=-4, upper_bound=4):
 def main(main_surf):
     font = pg.font.SysFont("monospace", 14, True)
     max_coord = 7
-    coords = get_coords(-max_coord, max_coord)
+    # coords = get_coords(-max_coord, max_coord)
+    coords = hx.get_area(np.array((0, 0, 0)), max_coord)
     running = True
 
     rad=3
