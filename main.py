@@ -7,7 +7,7 @@ import hexy as hx
 SIZE = np.array((800, 600))
 WIDTH, HEIGHT = SIZE
 HEX_RADIUS = 20.
-HEX_APOTHEM = HEX_RADIUS * np.cos(hx.deg_to_rad(30))
+HEX_APOTHEM = HEX_RADIUS * np.cos(np.deg2rad(30))
 CENTER = SIZE / 2
 HEX_POS = np.array((0, 0, 0))
 
