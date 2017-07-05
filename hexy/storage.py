@@ -33,11 +33,17 @@ class IncorrectCoordinatesError(Exception):
         super(IncorrectCoordinatesError, self).__init__(message)
 
 
-def make_key_from_coordinate(coordinate):
-    if len(coordinate) != 2:
-        raise IncorrectCoordinatesError(str(coordinate) + " has incorrect length.")
+class MismatchError(Exception):
+    def __init__(self, message, errors):
+        super(MismatchError, self).__init__(message)
 
-    return str(coordinate[0]) + ',' + str(coordinate[1])
+def make_key_from_indexes(indexes):
+    """
+    Converts indexes to string for hashing
+    :param indexes: the indexes of a hex. nx2, n=number of index pairs
+    :return: key for hashing based on index.
+    """
+    return [str(index[0]) + ',' + str(index[1]) for index in indexes]
 
 
 def solve_for_indexes(hexes):
@@ -54,9 +60,13 @@ class HexMap(dict):
     def __init__(self):
         super(HexMap, self).__init__()
 
-    def __setitem__(self, coordinate, hex_object):
-        key = make_key_from_coordinate(coordinate)
-        if key in dict.keys():
-            raise HexExistsError("key " + key + " already exists.")
+    def __setitem__(self, coordinates, hex_objects):
+        if len(coordinates) != len(hex_objects):
+            raise MismatchError("Number of coordinates does not match number of hex objects.")
+        indexes=solve_for_indexes(coordinates)
+        keys = make_key_from_indexes(indexes)
+        for key, hex in zip(keys, hex_objects):
+            if key in dict.keys():
+                raise HexExistsError("key " + key + " already exists.")
 
-        self[key] = hex_object
+            self[key] = hex
