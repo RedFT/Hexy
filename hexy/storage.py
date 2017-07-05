@@ -24,17 +24,17 @@ __bases_mat = np.array([cube_to_axial(DIR.SE), cube_to_axial(DIR.E)],
 
 
 class HexExistsError(Exception):
-    def __init__(self, message, errors):
+    def __init__(self, message):
         super(HexExistsError, self).__init__(message)
 
 
 class IncorrectCoordinatesError(Exception):
-    def __init__(self, message, errors):
+    def __init__(self, message):
         super(IncorrectCoordinatesError, self).__init__(message)
 
 
 class MismatchError(Exception):
-    def __init__(self, message, errors):
+    def __init__(self, message):
         super(MismatchError, self).__init__(message)
 
 def make_key_from_indexes(indexes):
@@ -43,7 +43,7 @@ def make_key_from_indexes(indexes):
     :param indexes: the indexes of a hex. nx2, n=number of index pairs
     :return: key for hashing based on index.
     """
-    return [str(index[0]) + ',' + str(index[1]) for index in indexes]
+    return [str(int(index[0])) + ',' + str(int(index[1])) for index in indexes]
 
 
 def solve_for_indexes(hexes):
@@ -53,6 +53,8 @@ def solve_for_indexes(hexes):
                   nx2, n=number of hexes
     :return: indexes of `hexes`
     """
+    if hexes.shape[1] != 2:
+        raise IncorrectCoordinatesError("Must be axial coordinates!")
     return np.linalg.solve(__bases_mat, hexes.T).T
 
 
@@ -66,7 +68,19 @@ class HexMap(dict):
         indexes=solve_for_indexes(coordinates)
         keys = make_key_from_indexes(indexes)
         for key, hex in zip(keys, hex_objects):
-            if key in dict.keys():
+            if key in self.keys():
                 raise HexExistsError("key " + key + " already exists.")
 
-            self[key] = hex
+            super(HexMap, self).__setitem__(key, hex)
+
+    def __getitem__(self, coordinate):
+        if len(coordinate.shape) == 1:
+            coordinate = np.array([coordinate])
+        indexes=solve_for_indexes(coordinate)
+        keys = make_key_from_indexes(indexes)
+        hexes = []
+        for key in keys:
+            if key in self.keys():
+                hexes.append(super(HexMap, self).__getitem__(key))
+        return hexes
+
