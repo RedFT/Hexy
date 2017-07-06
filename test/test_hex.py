@@ -43,10 +43,11 @@ def make_hex_surface(color, radius, border_color=(100, 100, 100), border=True, h
     return surface
 
 
-class MyHex(hx.HexTile):
-    def __init__(self, axial_coordinates=(0, 0, 0), color=(128, 0, 0), radius=20):
-        self.axial_coordinates = axial_coordinates
-        self.position = hx.hex_to_pixel(hx.axial_to_cube(axial_coordinates), radius)
+class TestHex(hx.HexTile):
+    def __init__(self, axial_coordinates, color, radius):
+        self.axial_coordinates = np.array([axial_coordinates])
+        self.cube_coordinates = hx.axial_to_cube(self.axial_coordinates)
+        self.position = hx.axial_to_pixel(self.axial_coordinates, radius)
         self.color = color
         self.radius = radius
         self.image = make_hex_surface(color, radius)
@@ -60,4 +61,12 @@ class MyHex(hx.HexTile):
         Get the location to draw this hex so that the center of the hex is at `self.position`.
         :return: The location to draw this hex so that the center of the hex is at `self.position`.
         """
-        return self.position - [self.image.get_width() / 2, self.image.get_height() / 2]
+        draw_position = self.position[0] - [self.image.get_width() / 2, self.image.get_height() / 2]
+        return draw_position
+
+    def get_position(self):
+        """
+        Retrieves the location of the center of the hex.
+        :return: The location of the center of the hex.
+        """
+        return self.position[0]

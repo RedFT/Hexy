@@ -21,8 +21,7 @@ from hexy import DIR, cube_to_axial
 from errors import IncorrectCoordinatesError, HexExistsError, MismatchError
 
 # The bases of the axial coordinate system
-__bases_mat = np.array([cube_to_axial(DIR.SE), cube_to_axial(DIR.E)],
-                       dtype=int)
+__bases_mat = cube_to_axial(np.array([DIR.SE, DIR.E], dtype=int))
 
 
 def make_key_from_indexes(indexes):
@@ -76,8 +75,8 @@ class HexMap(dict):
         :return: list of hexes mapped to using `coordinates`
         """
         if len(coordinates.shape) == 1:
-            coordinate = np.array([coordinates])
-        indexes = solve_for_indexes(coordinate)
+            coordinates = np.array([coordinates])
+        indexes = solve_for_indexes(coordinates)
         keys = make_key_from_indexes(indexes)
         hexes = []
         for key in keys:

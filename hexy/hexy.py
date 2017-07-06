@@ -1,10 +1,10 @@
 import numpy as np
 
-# Matrix for converting cube coordinates to pixel coordinates
-__hex_to_pixel_mat = np.array([[np.sqrt(3), np.sqrt(3) / 2], [0, 3 / 2.]])
+# Matrix for converting axial coordinates to pixel coordinates
+__axial_to_pixel_mat = np.array([[np.sqrt(3), np.sqrt(3) / 2], [0, 3 / 2.]])
 
-# Matrix for converting pixel coordinates to cube coordinates
-__pixel_to_hex_mat = np.array([[np.sqrt(3) / 3, -1. / 3], [0, 2 / 3.]])
+# Matrix for converting pixel coordinates to axial coordinates
+__pixel_to_axial_mat = np.array([[np.sqrt(3) / 3, -1. / 3], [0, 2 / 3.]])
 
 
 class DIR:
@@ -59,9 +59,9 @@ def get_ring(center, radius):
 
 def get_disk(center, radius):
     hex_set = []
-    for x in range(-radius, radius+1):
-        for y in range(max(-radius, -(x+radius)), min(radius+1, -x+radius+1)):
-            z = -x-y
+    for x in range(-radius, radius + 1):
+        for y in range(max(-radius, -(x + radius)), min(radius + 1, -x + radius + 1)):
+            z = -x - y
             hex_set.append(np.array([x, y, z]))
     return np.array(hex_set) + center
 
@@ -86,9 +86,7 @@ def cube_to_axial(cube):
     :param cube: A coordinate in cube form.
     :return: `cube` in axial form.
     """
-    q = cube[0]
-    r = cube[2]
-    return np.array((q, r))
+    return np.vstack((cube[:, 0], cube[:, 2])).T
 
 
 def axial_to_cube(axial):
@@ -97,49 +95,75 @@ def axial_to_cube(axial):
     :param axial: A coordinate in axial form.
     :return: `axial` in cube form.
     """
-    x = axial[0]
-    z = axial[1]
+    x = axial[:, 0]
+    z = axial[:, 1]
     y = -x - z
-    return np.array((x, y, z))
+    cube_coords = np.vstack((x, y, z)).T
+    return cube_coords
 
 
-def hex_to_pixel(cube, radius):
+def axial_to_pixel(axial, radius):
+    """
+    Converts the location of a hex in axial form to pixel coordinates.
+    :param axial: The location of a hex in axial form. nx3
+    :param radius: Radius of all hexagons.
+    :return: `axial` in pixel coordinates.
+    """
+    pos = radius * __axial_to_pixel_mat.dot(axial.T)
+    return pos.T
+
+
+def cube_to_pixel(cube, radius):
     """
     Converts the location of a hex in cube form to pixel coordinates.
-    :param cube: The location of a hex in cube form.
+    :param cube: The location of a hex in cube form. nx3
     :param radius: Radius of all hexagons.
     :return: `cube` in pixel coordinates.
     """
-    pos = radius * __hex_to_pixel_mat.dot(cube_to_axial(cube))
-    return pos
+    in_axial_form = cube_to_axial(cube)
+    return axial_to_pixel(in_axial_form, radius)
 
 
-def pixel_to_hex(pixel, radius):
+def pixel_to_axial(pixel, radius):
+    """
+    Converts the location of a hex in pixel coordinates to axial form.
+    :param pixel: The location of a hex in pixel coordinates. nx2
+    :param radius: Radius of all hexagons.
+    :return: `pixel` in axial coordinates.
+    """
+    axial = __pixel_to_axial_mat.dot(pixel.T) / radius
+    return cube_to_axial(cube_round(axial_to_cube(axial.T)))
+
+
+def pixel_to_cube(pixel, radius):
     """
     Converts the location of a hex in pixel coordinates to cube form.
-    :param pixel: The location of a hex in pixel coordinates.
+    :param pixel: The location of a hex in pixel coordinates. nx2
     :param radius: Radius of all hexagons.
     :return: `pixel` in cube coordinates.
     """
-    pos = __pixel_to_hex_mat.dot(pixel) / radius
-    return cube_round(axial_to_cube(pos))
+    axial = __pixel_to_axial_mat.dot(pixel.T) / radius
+    return cube_round(axial_to_cube(axial.T))
 
 
-def cube_round(cube):
+def cube_round(cubes):
     """
     Rounds a location in cube coordinates to the center of the nearest hex.
-    :param cube: A location in cube form.
+    :param cubes: Locations in cube form. nx3
     :return: The location of the center of the nearest hex in cube coordinates.
     """
-    rounded = (rx, ry, rz) = list(map(round, cube))
-    xdiff, ydiff, zdiff = list(map(abs, rounded - cube))
-    if xdiff > ydiff and xdiff > zdiff:
-        rx = -ry - rz
-    elif ydiff > zdiff:
-        ry = -rx - rz
-    else:
-        rz = -rx - ry
-    return np.array((rx, ry, rz))
+    rounded = np.zeros((cubes.shape[0], 3))
+    for i, cube in enumerate(cubes):
+        rounded_cube = (rx, ry, rz) = np.round(cube)
+        xdiff, ydiff, zdiff = list(map(abs, rounded_cube - cube))
+        if xdiff > ydiff and xdiff > zdiff:
+            rx = -ry - rz
+        elif ydiff > zdiff:
+            ry = -rx - rz
+        else:
+            rz = -rx - ry
+        rounded[i] = (rx, ry, rz)
+    return rounded
 
 
 def axial_round(axial):
@@ -153,13 +177,15 @@ def axial_round(axial):
 
 def get_hex_line(hex_start, hex_end):
     hex_distance = get_cube_distance(hex_start, hex_end)
+    if hex_distance <= 1:
+        return np.array([hex_start])
 
     # Set up linear system to compute linearly interpolated cube points
-    bottom_row = np.array([i/hex_distance for i in np.arange(hex_distance)])
-    x = np.vstack((1-bottom_row, bottom_row))
+    bottom_row = np.array([i / hex_distance for i in np.arange(hex_distance)])
+    x = np.vstack((1 - bottom_row, bottom_row))
     A = np.vstack((hex_start, hex_end)).T
 
     # linearly interpolate from a to b in n steps
     interpolated_points = A.dot(x)
-    interpolated_points=np.vstack((interpolated_points.T, hex_end))
-    return np.array(list(map(cube_round, interpolated_points)))
+    interpolated_points = np.vstack((interpolated_points.T, hex_end))
+    return np.array(cube_round(interpolated_points))
