@@ -84,15 +84,16 @@ class ExampleHexMap():
         self.selected_hex_image = make_hex_surface((128, 128, 128, 160), self.hex_radius, (255, 255, 255), hollow=True)
         coords = hx.get_area(np.array((0, 0, 0)), self.max_coord)
         axial_coords = []
-        for coord in coords:
-            axial_coords.append(hx.cube_to_axial(coord))
-
         hexes = []
-        for i, coord in enumerate(axial_coords):
+        num_hexes = np.random.binomial(len(coords), .5)
+        for i in np.random.choice(len(coords), num_hexes, replace=False):  # enumerate(coords):
+            axial_coord = hx.cube_to_axial(coords[i])
+            axial_coords.append(axial_coord)
+
             colo = list(COLORS[COL_IDX[i]])
             colo.append(255)
-            hexes.append(MyHex(coord, colo, hex_radius))
-            hexes[-1].set_value(i)
+            hexes.append(MyHex(axial_coord, colo, hex_radius))
+            hexes[-1].set_value(i)  # the number at the center of the hex
 
         self.hex_map[np.array(axial_coords)] = hexes
 

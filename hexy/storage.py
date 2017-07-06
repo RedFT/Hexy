@@ -16,26 +16,14 @@ Key Rules:
   '-a,b' or 'a,-b' or '-a,-b'
 """
 import numpy as np
+
 from util import DIR, cube_to_axial
+from errors import IncorrectCoordinatesError, HexExistsError, MismatchError
 
 # The bases of the axial coordinate system
 __bases_mat = np.array([cube_to_axial(DIR.SE), cube_to_axial(DIR.E)],
                        dtype=int)
 
-
-class HexExistsError(Exception):
-    def __init__(self, message):
-        super(HexExistsError, self).__init__(message)
-
-
-class IncorrectCoordinatesError(Exception):
-    def __init__(self, message):
-        super(IncorrectCoordinatesError, self).__init__(message)
-
-
-class MismatchError(Exception):
-    def __init__(self, message):
-        super(MismatchError, self).__init__(message)
 
 def make_key_from_indexes(indexes):
     """
@@ -63,9 +51,17 @@ class HexMap(dict):
         super(HexMap, self).__init__()
 
     def __setitem__(self, coordinates, hex_objects):
+        """
+        Assigns hex objects as values to coordinates as keys. The number of coordinates and hex objects
+        should be equal.
+        :param coordinates: Locations of hex objects.
+        :param hex_objects: the hex objects themselves.
+        :return: None
+        """
         if len(coordinates) != len(hex_objects):
             raise MismatchError("Number of coordinates does not match number of hex objects.")
-        indexes=solve_for_indexes(coordinates)
+
+        indexes = solve_for_indexes(coordinates)
         keys = make_key_from_indexes(indexes)
         for key, hex in zip(keys, hex_objects):
             if key in self.keys():
@@ -76,11 +72,10 @@ class HexMap(dict):
     def __getitem__(self, coordinate):
         if len(coordinate.shape) == 1:
             coordinate = np.array([coordinate])
-        indexes=solve_for_indexes(coordinate)
+        indexes = solve_for_indexes(coordinate)
         keys = make_key_from_indexes(indexes)
         hexes = []
         for key in keys:
             if key in self.keys():
                 hexes.append(super(HexMap, self).__getitem__(key))
         return hexes
-
