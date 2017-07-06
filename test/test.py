@@ -42,7 +42,7 @@ class ExampleHexMap():
 
         # Convert coords to axial coordinates, create hexes and randomly filter out some hexes.
         hexes = []
-        num_hexes = np.random.binomial(len(coords), 1.0)
+        num_hexes = np.random.binomial(len(coords), .9)
         axial_coords = hx.cube_to_axial(coords)
         axial_coords = axial_coords[np.random.choice(len(axial_coords), num_hexes, replace=False)]
 
@@ -75,7 +75,8 @@ class ExampleHexMap():
                 running = False
             if event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    self.clicked_hex = hx.pixel_to_cube(np.array([pg.mouse.get_pos() - self.center]), self.hex_radius)[0]
+                    self.clicked_hex = hx.pixel_to_cube(np.array([pg.mouse.get_pos() - self.center]), self.hex_radius)[
+                        0]
                 if event.button == 3:
                     self.selection_type += 1
                 if event.button == 4:
@@ -147,7 +148,8 @@ class ExampleHexMap():
             select_type = "Line"
         else:
             select_type = "Point"
-        selection_type_text = self.font.render("(Right Click To Change) Selection Type: " + select_type, True, (50, 50, 50))
+        selection_type_text = self.font.render("(Right Click To Change) Selection Type: " + select_type, True,
+                                               (50, 50, 50))
         radius_text = self.font.render("(Scroll Mouse Wheel To Change) Radius: " + str(self.rad), True, (50, 50, 50))
         fps_text = self.font.render(" FPS: " + str(int(self.clock.get_fps())), True, (50, 50, 50))
         self.main_surf.blit(fps_text, (5, 0))

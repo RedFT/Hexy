@@ -17,8 +17,8 @@ Key Rules:
 """
 import numpy as np
 
-from hexy import DIR, cube_to_axial
 from errors import IncorrectCoordinatesError, HexExistsError, MismatchError
+from hexy import DIR, cube_to_axial
 
 # The bases of the axial coordinate system
 __bases_mat = cube_to_axial(np.array([DIR.SE, DIR.E], dtype=int))

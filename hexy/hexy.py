@@ -22,6 +22,12 @@ class DIR:
 
 
 def get_cube_distance(hex_start, hex_end):
+    """
+    Computes the smallest number of hexes between hex_start and hex_end, on the hex lattice.
+    :param hex_start: Starting hex...
+    :param hex_end: Ending hex...
+    :return: Smallest number of hexes between `hex_start` and `hex_end`, on hex lattice.
+    """
     return np.sum(np.abs(hex_start - hex_end) / 2)
 
 
@@ -58,6 +64,12 @@ def get_ring(center, radius):
 
 
 def get_disk(center, radius):
+    """
+    Retrieves the locations of all the hexes within certain distance from a hexagon.
+    :param center: The location of the hexagon to get the neighbors of.
+    :param radius: The distance from `center` of the hexes we want.
+    :return: An array of locations of the hexes that are within `radius` units away from `center`.
+    """
     hex_set = []
     for x in range(-radius, radius + 1):
         for y in range(max(-radius, -(x + radius)), min(radius + 1, -x + radius + 1)):
@@ -83,7 +95,7 @@ def get_spiral(center, radius_start=1, radius_end=2):
 def cube_to_axial(cube):
     """
     Convert cube to axial coordinates.
-    :param cube: A coordinate in cube form.
+    :param cube: A coordinate in cube form. nx3
     :return: `cube` in axial form.
     """
     return np.vstack((cube[:, 0], cube[:, 2])).T
@@ -169,13 +181,19 @@ def cube_round(cubes):
 def axial_round(axial):
     """
     Rounds a location in axial coordinates to the center of the nearest hex.
-    :param axial: A location in axial form.
+    :param axial: A location in axial form. nx2
     :return: The location of the center of the nearest hex in axial coordinates.
     """
     return cube_to_axial(cube_round(axial_to_cube(axial)))
 
 
 def get_hex_line(hex_start, hex_end):
+    """
+    Get hexes on line from hex_start to hex_end.
+    :param hex_start: The hex where the line starts.
+    :param hex_end: The hex where the line ends.
+    :return: A set of hexes along a straight line from hex_start to hex_end.
+    """
     hex_distance = get_cube_distance(hex_start, hex_end)
     if hex_distance <= 1:
         return np.array([hex_start])
