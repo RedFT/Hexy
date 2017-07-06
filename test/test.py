@@ -1,7 +1,3 @@
-import numpy as np
-import pygame as pg
-import hexy as hx
-
 from test_hex import *
 
 COL_IDX = np.random.randint(0, 4, (7 ** 3))
@@ -12,6 +8,13 @@ COLORS = np.array([
     [53, 111, 163],  # water blue
     [85, 163, 193],  # sky blue
 ])
+
+
+class SelectionType:
+    POINT = 0
+    RING = 1
+    DISK = 2
+    LINE = 3
 
 
 class ExampleHexMap():
@@ -28,10 +31,10 @@ class ExampleHexMap():
         self.hex_map = hx.HexMap()
         self.max_coord = 7
 
-        self.ring = False
         self.rad = 3
 
         self.selected_hex_image = make_hex_surface((128, 128, 128, 160), self.hex_radius, (255, 255, 255), hollow=True)
+        self.selection_type = 0
 
         # Get all possible coordinates within `self.max_coord` as radius.
         coords = hx.get_disk(np.array((0, 0, 0)), self.max_coord)
@@ -39,7 +42,7 @@ class ExampleHexMap():
         # Convert coords to axial coordinates, create hexes and randomly filter out some hexes.
         axial_coords = []
         hexes = []
-        num_hexes = np.random.binomial(len(coords), .5)
+        num_hexes = np.random.binomial(len(coords), 1.0)
         for i in np.random.choice(len(coords), num_hexes, replace=False):  # enumerate(coords):
             axial_coord = hx.cube_to_axial(coords[i])
             axial_coords.append(axial_coord)
@@ -63,14 +66,14 @@ class ExampleHexMap():
         pg.font.init()
         self.font = pg.font.SysFont("monospace", 14, True)
 
-    def main_loop(self):
+    def handle_events(self):
         running = True
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 running = False
             if event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 3:
-                    self.ring = False if self.ring == True else True
+                    self.selection_type += 1
                 if event.button == 4:
                     self.rad += 1
                 if event.button == 5:
@@ -85,11 +88,18 @@ class ExampleHexMap():
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     running = False
+        return running
 
+    def main_loop(self):
+        running = self.handle_events()
         if self.rad > 5:
             self.rad = 5
         elif self.rad < 0:
             self.rad = 0
+
+        if self.selection_type > 3:
+            self.selection_type = 0
+
         return running
 
     def draw(self):
@@ -108,16 +118,17 @@ class ExampleHexMap():
         # show highlighted hex
         pos = np.array(pg.mouse.get_pos()) - self.center
         coord = hx.pixel_to_hex(pos, self.hex_radius)
-        hexes = self.hex_map[hx.cube_to_axial(coord)]
-        if len(hexes) > 0:
-            hexagon = hexes[0]
-            self.main_surf.blit(self.selected_hex_image, hexagon.get_draw_position() + self.center)
 
         # choose either ring or disk
-        if self.ring:
+        if self.selection_type == SelectionType.DISK:
             rad_hex = hx.get_disk(coord, self.rad)
-        else:
+        elif self.selection_type == SelectionType.RING:
             rad_hex = hx.get_ring(coord, self.rad)
+        elif self.selection_type == SelectionType.LINE:
+            rad_hex = hx.get_hex_line(np.zeros((3,)), coord)
+        elif self.selection_type == SelectionType.POINT:
+            rad_hex = [coord.copy()]
+
         # show ring hexes
         for point in rad_hex:
             hexes = self.hex_map[hx.cube_to_axial(point)]
@@ -125,10 +136,26 @@ class ExampleHexMap():
                 hexagon = hexes[0]
                 self.main_surf.blit(self.selected_hex_image, hexagon.get_draw_position() + self.center)
 
+        # draw hud
+        if self.selection_type == SelectionType.DISK:
+            select_type = "Disk"
+        elif self.selection_type == SelectionType.RING:
+            select_type = "Ring"
+        elif self.selection_type == SelectionType.LINE:
+            select_type = "Line"
+        else:
+            select_type = "Point"
+        selection_type_text = self.font.render("(Right Click To Change) Selection Type: " + select_type, True,
+                                               (50, 50, 50))
+        self.main_surf.blit(selection_type_text, (0, 0))
+        radius_text = self.font.render("(Scroll Mouse Wheel To Change) Radius: " + str(self.rad), True, (50, 50, 50))
+        self.main_surf.blit(radius_text, (0, 15))
+
+        # Update screen
         pg.display.update()
         self.main_surf.fill(COLORS[-1])
 
-    def quit(self):
+    def quit_app(self):
         pg.quit()
 
 
@@ -136,4 +163,4 @@ if __name__ == '__main__':
     ehm = ExampleHexMap()
     while ehm.main_loop():
         ehm.draw()
-    ehm.quit()
+    ehm.quit_app()

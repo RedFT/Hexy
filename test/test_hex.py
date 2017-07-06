@@ -1,6 +1,7 @@
 import numpy as np
-import hexy as hx
 import pygame as pg
+
+import hexy as hx
 
 
 def make_hex_surface(color, radius, border_color=(100, 100, 100), border=True, hollow=False):
@@ -60,5 +61,3 @@ class MyHex(hx.HexTile):
         :return: The location to draw this hex so that the center of the hex is at `self.position`.
         """
         return self.position - [self.image.get_width() / 2, self.image.get_height() / 2]
-
-

@@ -18,7 +18,6 @@ Key Rules:
 import numpy as np
 
 from hexy import DIR, cube_to_axial
-
 from errors import IncorrectCoordinatesError, HexExistsError, MismatchError
 
 # The bases of the axial coordinate system
@@ -70,9 +69,14 @@ class HexMap(dict):
 
             super(HexMap, self).__setitem__(key, hex)
 
-    def __getitem__(self, coordinate):
-        if len(coordinate.shape) == 1:
-            coordinate = np.array([coordinate])
+    def __getitem__(self, coordinates):
+        """
+        Retrieves hexes stores at `coordinates`
+        :param coordinate: the locations used as keys for hexes. You can pass more than one coordinate
+        :return: list of hexes mapped to using `coordinates`
+        """
+        if len(coordinates.shape) == 1:
+            coordinate = np.array([coordinates])
         indexes = solve_for_indexes(coordinate)
         keys = make_key_from_indexes(indexes)
         hexes = []
