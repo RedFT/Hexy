@@ -11,4 +11,3 @@ class IncorrectCoordinatesError(Exception):
 class MismatchError(Exception):
     def __init__(self, message):
         super(MismatchError, self).__init__(message)
-

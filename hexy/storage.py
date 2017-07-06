@@ -18,6 +18,7 @@ Key Rules:
 import numpy as np
 
 from util import DIR, cube_to_axial
+
 from errors import IncorrectCoordinatesError, HexExistsError, MismatchError
 
 # The bases of the axial coordinate system
