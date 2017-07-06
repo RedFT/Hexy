@@ -53,7 +53,7 @@ def get_ring(center, radius):
     return np.squeeze(rad_hex) + center.astype(int)
 
 
-def get_area(center, radius):
+def get_disk(center, radius):
     """
     Retrieves all hexes that are `radius` hexes away from the `center`.
     :param center: The location of the center hex.
