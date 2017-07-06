@@ -21,6 +21,10 @@ class DIR:
     ALL = np.array([NW, NE, E, SE, SW, W, ])
 
 
+def get_cube_distance(hex_start, hex_end):
+    return np.sum(np.abs(hex_start - hex_end) / 2)
+
+
 def get_neighbor(hex, direction):
     """
     Simply returns the neighbor, in the direction specified, of the hexagon.
@@ -54,14 +58,24 @@ def get_ring(center, radius):
 
 
 def get_disk(center, radius):
+    hex_set = []
+    for x in range(-radius, radius+1):
+        for y in range(max(-radius, -(x+radius)), min(radius+1, -x+radius+1)):
+            z = -x-y
+            hex_set.append(np.array([x, y, z]))
+    return np.array(hex_set) + center
+
+
+def get_spiral(center, radius_start=1, radius_end=2):
     """
     Retrieves all hexes that are `radius` hexes away from the `center`.
     :param center: The location of the center hex.
-    :param radius: The distance from center. We want all hexes within this distance from `center`.
+    :param radius_start: The distance from center. We want all hexes greater than or equal to this distance.
+    :param radius_end: The distance from center. We want all hexes within this distance from `center`.
     :return: An array of locations of the hexes that are within `radius` hexes away from `center`.
     """
     hex_area = get_ring(center, 0)
-    for i in range(1, radius + 1):
+    for i in range(radius_start, radius_end + 1):
         hex_area = np.append(hex_area, get_ring(center, i), axis=0)
     return hex_area
 
@@ -117,8 +131,8 @@ def cube_round(cube):
     :param cube: A location in cube form.
     :return: The location of the center of the nearest hex in cube coordinates.
     """
-    rounded = (rx, ry, rz) = map(round, cube)
-    xdiff, ydiff, zdiff = map(abs, rounded - cube)
+    rounded = (rx, ry, rz) = list(map(round, cube))
+    xdiff, ydiff, zdiff = list(map(abs, rounded - cube))
     if xdiff > ydiff and xdiff > zdiff:
         rx = -ry - rz
     elif ydiff > zdiff:
@@ -135,3 +149,17 @@ def axial_round(axial):
     :return: The location of the center of the nearest hex in axial coordinates.
     """
     return cube_to_axial(cube_round(axial_to_cube(axial)))
+
+
+def get_hex_line(hex_start, hex_end):
+    hex_distance = get_cube_distance(hex_start, hex_end)
+
+    # Set up linear system to compute linearly interpolated cube points
+    bottom_row = np.array([i/hex_distance for i in np.arange(hex_distance)])
+    x = np.vstack((1-bottom_row, bottom_row))
+    A = np.vstack((hex_start, hex_end)).T
+
+    # linearly interpolate from a to b in n steps
+    interpolated_points = A.dot(x)
+    interpolated_points=np.vstack((interpolated_points.T, hex_end))
+    return np.array(list(map(cube_round, interpolated_points)))
