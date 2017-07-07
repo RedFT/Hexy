@@ -18,7 +18,7 @@ class SelectionType:
 
 
 class ExampleHexMap():
-    def __init__(self, size=(600, 600), hex_radius=22, caption="ExampleHexMap"):
+    def __init__(self, size=(600, 600), hex_radius=23, caption="ExampleHexMap"):
         self.caption = caption
         self.size = np.array(size)
         self.width, self.height = self.size
@@ -29,7 +29,7 @@ class ExampleHexMap():
         self.hex_offset = np.array([self.hex_radius * np.sqrt(3) / 2, self.hex_radius])
 
         self.hex_map = hx.HexMap()
-        self.max_coord = 7
+        self.max_coord = 6
 
         self.rad = 3
 

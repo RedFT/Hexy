@@ -16,9 +16,9 @@ def make_hex_surface(color, radius, border_color=(100, 100, 100), border=True, h
     """
     points = []
     for i in range(6):
-        angle = np.deg2rad(30 * (2 * i + 1))
-        x = radius * np.cos(angle)
-        y = radius * np.sin(angle)
+        angle = np.deg2rad(60 * i + 30)
+        x = np.round(radius * np.cos(angle))
+        y = np.round(radius * np.sin(angle))
         points.append((x, y))
 
     points = np.array(points)
@@ -39,7 +39,7 @@ def make_hex_surface(color, radius, border_color=(100, 100, 100), border=True, h
         pg.draw.polygon(surface, color, points + center, 0)
 
     if border or (not hollow):
-        pg.draw.polygon(surface, border_color, points + center, 4)
+        pg.draw.polygon(surface, border_color, points + center, 1)
     return surface
 
 

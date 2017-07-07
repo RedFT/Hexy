@@ -68,6 +68,11 @@ class HexMap(dict):
 
             super(HexMap, self).__setitem__(key, hex)
 
+    def overwrite_entry(self, coordinate, hex):
+        indexes = solve_for_indexes(np.array([coordinate]))
+        keys = make_key_from_indexes(indexes)
+        super(HexMap, self).__setitem__(keys[0], hex)
+
     def __getitem__(self, coordinates):
         """
         Retrieves hexes stores at `coordinates`

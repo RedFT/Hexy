@@ -195,7 +195,7 @@ def get_hex_line(hex_start, hex_end):
     :return: A set of hexes along a straight line from hex_start to hex_end.
     """
     hex_distance = get_cube_distance(hex_start, hex_end)
-    if hex_distance <= 1:
+    if hex_distance < 1:
         return np.array([hex_start])
 
     # Set up linear system to compute linearly interpolated cube points
