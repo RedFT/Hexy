@@ -1,4 +1,4 @@
-# Project Title
+# Hexy, A library for dealing with hexagonal coordinate systems.
 
 A library that makes working with a hexagonal lattice easier. Some of the inspiration for this library comes from [http://www.redblobgames.com/grids/hexagons/](http://www.redblobgames.com/grids/hexagons/).
 
