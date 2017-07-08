@@ -14,3 +14,5 @@ class HexTile(object):
         self.position = hx.axial_to_pixel(self.axial_coordinates, radius)
         self.radius = radius
         self.tile_id = tile_id
+
+
