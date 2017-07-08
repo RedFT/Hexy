@@ -1,6 +1,8 @@
+import sys
+sys.path.append("..")
 import numpy as np
-
 import hexy as hx
+
 
 hm = hx.HexMap()
 

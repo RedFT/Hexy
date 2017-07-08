@@ -1,3 +1,6 @@
+import sys
+sys.path.append("..")
+
 from test_hex import *
 
 COL_IDX = np.random.randint(0, 4, (7 ** 3))
