@@ -18,7 +18,7 @@ class SelectionType:
 
 
 class ExampleHexMap():
-    def __init__(self, size=(600, 600), hex_radius=23, caption="ExampleHexMap"):
+    def __init__(self, size=(600, 600), hex_radius=22, caption="ExampleHexMap"):
         self.caption = caption
         self.size = np.array(size)
         self.width, self.height = self.size
@@ -109,8 +109,11 @@ class ExampleHexMap():
 
     def draw(self):
         # show all hexes
-        for hexagon in self.hex_map.values():
-            self.main_surf.blit(hexagon.image, hexagon.get_draw_position() + self.center)
+        hexagons = [hexagon for hexagon in self.hex_map.values()]
+        hex_positions = np.array([hexagon.get_draw_position() for hexagon in hexagons])
+        sorted_idxs = np.argsort(hex_positions[:,1])
+        for idx in sorted_idxs:
+            self.main_surf.blit(hexagons[idx].image, hex_positions[idx] + self.center)
 
         # draw values of hexes
         for hexagon in self.hex_map.values():

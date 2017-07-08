@@ -14,14 +14,10 @@ def make_hex_surface(color, radius, border_color=(100, 100, 100), border=True, h
     :param hollow: Does not fill hex with color if True.
     :return: A pygame surface with a hexagon drawn on it
     """
-    points = []
-    for i in range(6):
-        angle = np.deg2rad(60 * i + 30)
-        x = np.round(radius * np.cos(angle))
-        y = np.round(radius * np.sin(angle))
-        points.append((x, y))
-
-    points = np.array(points)
+    angles_in_radians = np.deg2rad([60 * i + 30 for i in range(6)])
+    x = radius * np.cos(angles_in_radians)
+    y = radius * np.sin(angles_in_radians)
+    points = np.round(np.vstack([x, y]).T)
 
     sorted_x = sorted(points[:, 0])
     sorted_y = sorted(points[:, 1])
@@ -30,16 +26,27 @@ def make_hex_surface(color, radius, border_color=(100, 100, 100), border=True, h
     miny = sorted_y[0]
     maxy = sorted_y[-1]
 
-    center = ((maxx - minx + 10) / 2, (maxy - miny + 10) / 2)
-    surface = pg.Surface(map(int, (maxx - minx + 10, maxy - miny + 10)))
+    sorted_idxs = np.lexsort((points[:, 0], points[:, 1]))
+
+    surf_size = np.array((maxx - minx, maxy - miny)) * 2 + 1
+    center = surf_size / 2
+    surface = pg.Surface(surf_size)
     surface.set_colorkey((0, 0, 0))
+
+    # Set alpha if color has 4th coordinate.
     if len(color) >= 4:
         surface.set_alpha(color[-1])
+
+    # fill if not hollow.
     if not hollow:
         pg.draw.polygon(surface, color, points + center, 0)
 
-    if border or (not hollow):
-        pg.draw.polygon(surface, border_color, points + center, 1)
+
+    points[sorted_idxs[-1:-4:-1]] += [0, 1]
+    # if border is true or hollow is true draw border.
+    if border or hollow:
+        pg.draw.lines(surface, border_color, True, points + center, 1)
+
     return surface
 
 

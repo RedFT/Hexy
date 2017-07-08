@@ -18,10 +18,10 @@ Key Rules:
 import numpy as np
 
 from errors import IncorrectCoordinatesError, HexExistsError, MismatchError
-from hexy import DIR, cube_to_axial
+from hexy import *
 
 # The bases of the axial coordinate system
-__bases_mat = cube_to_axial(np.array([DIR.SE, DIR.E], dtype=int))
+bases_mat = cube_to_axial(np.array([SE, E], dtype=int))
 
 
 def make_key_from_indexes(indexes):
@@ -42,7 +42,7 @@ def solve_for_indexes(hexes):
     """
     if hexes.shape[1] != 2:
         raise IncorrectCoordinatesError("Must be axial coordinates!")
-    return np.linalg.solve(__bases_mat, hexes.T).T
+    return np.linalg.solve(bases_mat, hexes.T).T
 
 
 class HexMap(dict):
@@ -68,10 +68,25 @@ class HexMap(dict):
 
             super(HexMap, self).__setitem__(key, hex)
 
+    def setitem_direct(self, key, value):
+        if key in self.keys():
+            raise HexExistsError("key " + key + " already exists.")
+
+        super(HexMap, self).__setitem__(key, value)
+
     def overwrite_entry(self, coordinate, hex):
         indexes = solve_for_indexes(np.array([coordinate]))
         keys = make_key_from_indexes(indexes)
         super(HexMap, self).__setitem__(keys[0], hex)
+
+    def __delitem__(self, coordinates):
+        if len(coordinates.shape) == 1:
+            coordinates = np.array([coordinates])
+        indexes = solve_for_indexes(coordinates)
+        keys = make_key_from_indexes(indexes)
+        for key in keys:
+            if key in self.keys():
+                super(HexMap, self).__delitem__(key)
 
     def __getitem__(self, coordinates):
         """
