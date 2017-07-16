@@ -24,7 +24,7 @@ from hexy import *
 bases_mat = cube_to_axial(np.array([SE, E], dtype=int))
 
 
-def make_key_from_indexes(indexes):
+def make_key_from_coordinates(indexes):
     """
     Converts indexes to string for hashing
     :param indexes: the indexes of a hex. nx2, n=number of index pairs
@@ -60,8 +60,7 @@ class HexMap(dict):
         if len(coordinates) != len(hex_objects):
             raise MismatchError("Number of coordinates does not match number of hex objects.")
 
-        indexes = solve_for_indexes(coordinates)
-        keys = make_key_from_indexes(indexes)
+        keys = make_key_from_coordinates(coordinates)
         for key, hex in zip(keys, hex_objects):
             if key in self.keys():
                 raise HexExistsError("key " + key + " already exists.")
@@ -74,16 +73,15 @@ class HexMap(dict):
 
         super(HexMap, self).__setitem__(key, value)
 
-    def overwrite_entry(self, coordinate, hex):
-        indexes = solve_for_indexes(np.array([coordinate]))
-        keys = make_key_from_indexes(indexes)
-        super(HexMap, self).__setitem__(keys[0], hex)
+    def overwrite_entries(self, coordinates, hex):
+        keys = make_key_from_coordinates(coordinates)
+        for key in keys:
+            super(HexMap, self).__setitem__(key, hex)
 
     def __delitem__(self, coordinates):
         if len(coordinates.shape) == 1:
             coordinates = np.array([coordinates])
-        indexes = solve_for_indexes(coordinates)
-        keys = make_key_from_indexes(indexes)
+        keys = make_key_from_coordinates(coordinates)
         for key in keys:
             if key in self.keys():
                 super(HexMap, self).__delitem__(key)
@@ -96,8 +94,7 @@ class HexMap(dict):
         """
         if len(coordinates.shape) == 1:
             coordinates = np.array([coordinates])
-        indexes = solve_for_indexes(coordinates)
-        keys = make_key_from_indexes(indexes)
+        keys = make_key_from_coordinates(coordinates)
         hexes = []
         for key in keys:
             if key in self.keys():
