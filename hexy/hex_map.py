@@ -1,13 +1,7 @@
 """
 This file contains routines for storing the properties of hexes
 
-When using axial coordinates, we can generate every possible hex coordinate
-can be written as a unique linear combination of two bases: a*SE + b*NE,
-where a,b are integers.
-
-Since the there is a unique (a,b) for every hex, we can use (a,b) as a key
-in a python dictionary to store properties of the hex indexed by (a,b)
-
+The keys are just the axial coordinates.
 
 Key Rules:
 - must be written 'a,b' without quotes
