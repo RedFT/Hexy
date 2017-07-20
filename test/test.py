@@ -36,7 +36,12 @@ class ExampleHexMap():
 
         self.rad = 3
 
-        self.selected_hex_image = make_hex_surface((128, 128, 128, 160), self.hex_radius, (255, 255, 255), hollow=True)
+        self.selected_hex_image = make_hex_surface(
+                (128, 128, 128, 160), 
+                self.hex_radius, 
+                (255, 255, 255), 
+                hollow=True)
+
         self.selection_type = 3
         self.clicked_hex = np.array([0, 0, 0])
 
@@ -78,8 +83,10 @@ class ExampleHexMap():
                 running = False
             if event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    self.clicked_hex = hx.pixel_to_cube(np.array([pg.mouse.get_pos() - self.center]), self.hex_radius)[
-                        0]
+                    self.clicked_hex = hx.pixel_to_cube(
+                            np.array([pg.mouse.get_pos() - self.center]), 
+                            self.hex_radius)
+                    self.clicked_hex = self.clicked_hex[0]
                 if event.button == 3:
                     self.selection_type += 1
                 if event.button == 4:
@@ -96,6 +103,7 @@ class ExampleHexMap():
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     running = False
+
         return running
 
     def main_loop(self):
@@ -143,7 +151,9 @@ class ExampleHexMap():
         hexes = self.hex_map[rad_hex_axial]
         if len(hexes) > 0:
             for hexagon in hexes:
-                self.main_surf.blit(self.selected_hex_image, hexagon.get_draw_position() + self.center)
+                self.main_surf.blit(
+                        self.selected_hex_image, 
+                        hexagon.get_draw_position() + self.center)
 
         # draw hud
         if self.selection_type == SelectionType.DISK:
@@ -154,9 +164,15 @@ class ExampleHexMap():
             select_type = "Line"
         else:
             select_type = "Point"
-        selection_type_text = self.font.render("(Right Click To Change) Selection Type: " + select_type, True,
-                                               (50, 50, 50))
-        radius_text = self.font.render("(Scroll Mouse Wheel To Change) Radius: " + str(self.rad), True, (50, 50, 50))
+
+        selection_type_text = self.font.render(
+                "(Right Click To Change) Selection Type: " + select_type, 
+                True,
+                (50, 50, 50))
+        radius_text = self.font.render(
+                "(Scroll Mouse Wheel To Change) Radius: " + str(self.rad), 
+                True, 
+                (50, 50, 50))
         fps_text = self.font.render(" FPS: " + str(int(self.clock.get_fps())), True, (50, 50, 50))
         self.main_surf.blit(fps_text, (5, 0))
         self.main_surf.blit(radius_text, (5, 15))
