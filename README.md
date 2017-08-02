@@ -20,12 +20,12 @@ sudo apt install python2.7 python-numpy python-pygame
 Just clone this repository into your project's root.
 
 
-## Running the tests
+## Running the example
 
-Go into the tests directory and run `test.py`
+Go the project root directory and run the following:
 
 ```
-python2 test.py
+python2 -m test.test
 ```
 
 The test app just shows off some features of the library. To play around you can:
