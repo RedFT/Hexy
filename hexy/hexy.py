@@ -59,7 +59,7 @@ def get_ring(center, radius):
             rad_hex[count] = ALL_DIRECTIONS[i - 1] * (radius - k) + ALL_DIRECTIONS[i] * (k)
             count += 1
 
-    return np.squeeze(rad_hex) + center.astype(int)
+    return np.squeeze(rad_hex) + center
 
 
 def get_disk(center, radius):
