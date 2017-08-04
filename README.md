@@ -2,6 +2,8 @@
 
 A library that makes working with a hexagonal lattice easier. Some of the inspiration for this library comes from [http://www.redblobgames.com/grids/hexagons/](http://www.redblobgames.com/grids/hexagons/).
 
+![Alt text](/test/Hexy.gif?raw=true "Short Demo")
+
 ## Getting Started
 
 ### Prerequisites
