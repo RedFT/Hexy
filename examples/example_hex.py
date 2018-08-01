@@ -50,7 +50,7 @@ def make_hex_surface(color, radius, border_color=(100, 100, 100), border=True, h
     return surface
 
 
-class TestHex(hx.HexTile):
+class ExampleHex(hx.HexTile):
     def __init__(self, axial_coordinates, color, radius):
         self.axial_coordinates = np.array([axial_coordinates])
         self.cube_coordinates = hx.axial_to_cube(self.axial_coordinates)

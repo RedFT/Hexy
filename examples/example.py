@@ -1,7 +1,12 @@
 import sys
 sys.path.append("..")
 
-from test_hex import *
+import numpy as np
+import hexy as hx
+import pygame as pg
+
+from example_hex import ExampleHex
+from example_hex import make_hex_surface
 
 COL_IDX = np.random.randint(0, 4, (7 ** 3))
 COLORS = np.array([
@@ -81,7 +86,7 @@ class ExampleHexMap():
         for i, axial in enumerate(axial_coords):
             colo = list(COLORS[COL_IDX[i]])
             colo.append(255)
-            hexes.append(TestHex(axial, colo, hex_radius))
+            hexes.append(ExampleHex(axial, colo, hex_radius))
             hexes[-1].set_value(i)  # the number at the center of the hex
 
         self.hex_map[np.array(axial_coords)] = hexes
