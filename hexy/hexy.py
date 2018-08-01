@@ -1,11 +1,11 @@
 import numpy as np
 
+
 # Matrix for converting axial coordinates to pixel coordinates
 axial_to_pixel_mat = np.array([[np.sqrt(3), np.sqrt(3) / 2], [0, 3 / 2.]])
 
 # Matrix for converting pixel coordinates to axial coordinates
 pixel_to_axial_mat = np.linalg.inv(axial_to_pixel_mat)
-
 
 
 # These are the vectors for moving from any hex to one of its neighbors.
