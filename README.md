@@ -8,12 +8,9 @@ A library that makes working with a hexagonal lattice easier. Some of the inspir
 
 ## Getting Started
 
-### Prerequisites
+### Dependencies
 
-The base library only requires `python2.7` and `numpy`.
-
-If you want to run the demo app (`example.py`), you should have `pygame` installed.
-
+To install the dependencies run:
 ```bash
 pip install -r requirements.txt
 ```
