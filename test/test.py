@@ -13,11 +13,35 @@ COLORS = np.array([
 ])
 
 
-class SelectionType:
-    POINT = 0
-    RING = 1
-    DISK = 2
-    LINE = 3
+class Selection:
+    class Type:
+        POINT = 0 
+        RING = 1
+        DISK = 2
+        LINE = 3
+
+        @staticmethod
+        def to_string(selection_type):
+            if selection_type == Selection.Type.DISK:
+                return "disk"
+            elif selection_type == Selection.Type.RING:
+                return "ring"
+            elif selection_type == Selection.Type.LINE:
+                return "line"
+            else:
+                return "point"
+
+
+    @staticmethod
+    def get_selection(selection_type, cube_mouse, rad, clicked_hex=None):
+            if selection_type == Selection.Type.DISK:
+                return hx.get_disk(cube_mouse, rad)
+            elif selection_type == Selection.Type.RING:
+                return hx.get_ring(cube_mouse, rad)
+            elif selection_type == Selection.Type.LINE:
+                return hx.get_hex_line(clicked_hex, cube_mouse)
+            else:
+                return cube_mouse.copy()
 
 
 class ExampleHexMap():
@@ -120,7 +144,7 @@ class ExampleHexMap():
 
     def draw(self):
         # show all hexes
-        hexagons = [hexagon for hexagon in self.hex_map.values()]
+        hexagons = self.hex_map.values()
         hex_positions = np.array([hexagon.get_draw_position() for hexagon in hexagons])
         sorted_idxs = np.argsort(hex_positions[:,1])
         for idx in sorted_idxs:
@@ -138,35 +162,21 @@ class ExampleHexMap():
         cube_mouse = hx.pixel_to_cube(mouse_pos, self.hex_radius)
 
         # choose either ring or disk
-        if self.selection_type == SelectionType.DISK:
-            rad_hex = hx.get_disk(cube_mouse, self.rad)
-        elif self.selection_type == SelectionType.RING:
-            rad_hex = hx.get_ring(cube_mouse, self.rad)
-        elif self.selection_type == SelectionType.LINE:
-            rad_hex = hx.get_hex_line(self.clicked_hex, cube_mouse)
-        else:
-            rad_hex = cube_mouse.copy()
+        rad_hex = Selection.get_selection(self.selection_type, cube_mouse, self.rad, self.clicked_hex)
 
         rad_hex_axial = hx.cube_to_axial(rad_hex)
         hexes = self.hex_map[rad_hex_axial]
-        if len(hexes) > 0:
-            for hexagon in hexes:
+
+        map(lambda hexagon: 
                 self.main_surf.blit(
-                        self.selected_hex_image, 
-                        hexagon.get_draw_position() + self.center)
+                    self.selected_hex_image, hexagon.get_draw_position() + self.center), 
+                hexes)
 
         # draw hud
-        if self.selection_type == SelectionType.DISK:
-            select_type = "Disk"
-        elif self.selection_type == SelectionType.RING:
-            select_type = "Ring"
-        elif self.selection_type == SelectionType.LINE:
-            select_type = "Line"
-        else:
-            select_type = "Point"
+        self.selection_type
 
         selection_type_text = self.font.render(
-                "(Right Click To Change) Selection Type: " + select_type, 
+                "(Right Click To Change) Selection Type: " + Selection.Type.to_string(self.selection_type),
                 True,
                 (50, 50, 50))
         radius_text = self.font.render(
