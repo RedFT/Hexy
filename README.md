@@ -1,4 +1,4 @@
-![Build Status Image](https://travis-ci.org/RedFT/Hexy.svg?branch=master)
+[![Build Status](https://travis-ci.org/RedFT/Hexy.svg?branch=master)](https://travis-ci.org/RedFT/Hexy)
 
 # Hexy, A library for dealing with hexagonal coordinate systems.
 
