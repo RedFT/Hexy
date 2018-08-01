@@ -10,24 +10,22 @@ A library that makes working with a hexagonal lattice easier. Some of the inspir
 
 The base library only requires `python2.7` and `numpy`.
 
-If you want to run the tests, you should have `pygame` installed.
+If you want to run the demo app (`example.py`), you should have `pygame` installed.
 
-
-```
-sudo apt install python2.7 python-numpy python-pygame
+```bash
+pip install -r requirements.txt
 ```
 
 ### Installing
 
 Just clone this repository into your project's root.
 
-
 ## Running the example
 
 Go the project root directory and run the following:
 
 ```
-python2 -m test.test
+python2 -m examples.example
 ```
 
 The test app just shows off some features of the library. To play around you can:
