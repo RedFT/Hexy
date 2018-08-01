@@ -156,3 +156,7 @@ ENV/
 draw.pyc
 hexy.pyc
 util.pyc
+
+# pytest
+.pytest_cache
+
