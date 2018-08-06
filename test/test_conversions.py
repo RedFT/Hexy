@@ -43,5 +43,5 @@ def test_the_converted_coords_and_dataset_coords_retrieve_the_same_data():
     hm[axial_coords] = coords
     retrieved = hm[pixel_to_cube_to_axial_coords]
 
-    assert np.array_equal(retrieved, cube_coords)
+    assert np.array_equal(retrieved, coords)
 
