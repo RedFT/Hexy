@@ -2,11 +2,10 @@ import sys
 sys.path.append("..")
 
 import numpy as np
-import hexy as hx
 import pygame as pg
-
-from example_hex import ExampleHex
-from example_hex import make_hex_surface
+from Hexy.hexy import hexy as hx
+from Hexy.hexy.hex_map import HexMap
+from example_hex import ExampleHex, make_hex_surface
 
 COL_IDX = np.random.randint(0, 4, (7 ** 3))
 COLORS = np.array([
@@ -60,7 +59,7 @@ class ExampleHexMap():
         self.hex_apothem = hex_radius * np.sqrt(3) / 2
         self.hex_offset = np.array([self.hex_radius * np.sqrt(3) / 2, self.hex_radius])
 
-        self.hex_map = hx.HexMap()
+        self.hex_map = HexMap()
         self.max_coord = 6
 
         self.rad = 3
@@ -151,7 +150,8 @@ class ExampleHexMap():
         # show all hexes
         hexagons = self.hex_map.values()
         hex_positions = np.array([hexagon.get_draw_position() for hexagon in hexagons])
-        sorted_idxs = np.argsort(hex_positions[:,1])
+        sorted_idxs = np.argsort(hex_positions[:, 1])
+        hexagons = list(hexagons)  # need to place dictionary.values() into a list in order to iterate.
         for idx in sorted_idxs:
             self.main_surf.blit(hexagons[idx].image, hex_positions[idx] + self.center)
 
@@ -172,14 +172,10 @@ class ExampleHexMap():
         rad_hex_axial = hx.cube_to_axial(rad_hex)
         hexes = self.hex_map[rad_hex_axial]
 
-        map(lambda hexagon: 
-                self.main_surf.blit(
-                    self.selected_hex_image, hexagon.get_draw_position() + self.center), 
-                hexes)
+        for a_hex in hexes:
+            self.main_surf.blit(self.selected_hex_image, a_hex.get_draw_position() + self.center)
 
         # draw hud
-        self.selection_type
-
         selection_type_text = self.font.render(
                 "(Right Click To Change) Selection Type: " + Selection.Type.to_string(self.selection_type),
                 True,
@@ -192,6 +188,9 @@ class ExampleHexMap():
         self.main_surf.blit(fps_text, (5, 0))
         self.main_surf.blit(radius_text, (5, 15))
         self.main_surf.blit(selection_type_text, (5, 30))
+        current_text = "Selected hex: " + str(self.clicked_hex) + " | Hovering over hex: " + str(cube_mouse)
+        current_text = self.font.render(current_text, True, (50, 50, 50))
+        self.main_surf.blit(current_text, (5, 45))
 
         # Update screen
         pg.display.update()

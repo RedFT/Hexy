@@ -1,1 +1,1 @@
-from hexy import *
+from .hexy import *

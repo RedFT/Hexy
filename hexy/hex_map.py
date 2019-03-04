@@ -9,10 +9,8 @@ Key Rules:
 - a and b can be negative, so it is okay if the key is written as
   '-a,b' or 'a,-b' or '-a,-b'
 """
-import numpy as np
-
-from errors import IncorrectCoordinatesError, HexExistsError, MismatchError
-from hexy import *
+from .errors import IncorrectCoordinatesError, HexExistsError, MismatchError
+from .hexy import *
 
 # The bases of the axial coordinate system
 bases_mat = cube_to_axial(np.array([SE, E], dtype=int))
