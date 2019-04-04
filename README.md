@@ -8,6 +8,12 @@ A library that makes working with a hexagonal lattice easier. Some of the inspir
 
 ## Getting Started
 
+### Installing via pip
+
+```bash
+pip install hexy
+```
+
 ### Dependencies
 
 To install the dependencies run:
@@ -25,6 +31,12 @@ Go the project root directory and run the following:
 
 ```
 python2 -m examples.example
+```
+
+If that doesn't work, then try:
+
+```
+python2 examples/example.py
 ```
 
 The test app just shows off some features of the library. To play around you can:
