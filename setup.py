@@ -23,7 +23,6 @@ setup(
     'pytest==3.7.0',
     'scandir==1.7',
     'six==1.11.0',
-  ]
       ],
   classifiers=[
     'Development Status :: 5 - Production/Stable',      
