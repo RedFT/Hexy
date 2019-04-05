@@ -2,7 +2,7 @@ atomicwrites==1.1.5
 attrs==18.1.0
 funcsigs==1.0.2
 more-itertools==4.3.0
-numpy==1.15.0
+numpy>=1.15.0
 pathlib2==2.3.2
 pluggy==0.7.1
 py==1.5.4
