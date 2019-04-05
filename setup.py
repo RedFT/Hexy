@@ -2,13 +2,13 @@ from distutils.core import setup
 setup(
   name = 'Hexy',         
   packages = ['hexy'],   
-  version = '1.4',      
+  version = '1.41',      
   license='MIT',        
   description = 'A library that makes working with a hexagonal lattice easier.',   
   author = 'Norbu Tsering',                   
   author_email = 'norbu.tsering.cs@gmail.com',      
   url = 'https://github.com/redft/hexy',   
-  download_url = 'https://github.com/RedFT/Hexy/archive/1.4.tar.gz',    
+  download_url = 'https://github.com/RedFT/Hexy/archive/1.41.tar.gz',
   keywords = ['hexy', 'coordinate', 'hexagon', 'hexagonal'],
   install_requires = ["numpy >= 1.15.0"],
   extras_require ={            
