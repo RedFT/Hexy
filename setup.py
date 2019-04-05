@@ -10,7 +10,7 @@ setup(
   url = 'https://github.com/redft/hexy',   
   download_url = 'https://github.com/RedFT/Hexy/archive/1.4.tar.gz',    
   keywords = ['hexy', 'coordinate', 'hexagon', 'hexagonal'],
-  install_requires = ["numpy == 1.15.0"],
+  install_requires = ["numpy >= 1.15.0"],
   extras_require ={            
       'examples': [
         "atomicwrites (==1.1.5)",
