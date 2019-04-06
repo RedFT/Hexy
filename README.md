@@ -27,19 +27,17 @@ Just clone this repository into your project's root.
 
 ## Running the example
 
-Go the project root directory and run the following:
+We'll use the [HexyExamples](https://github.com/redft/hexyexamples) repo to demonstrate
+`hexy`.
 
 ```
-python2 -m examples.example
+git clone https://github.com/redft/hexyexamples
+cd hexyexamples
+pip install -r requirements.txt
+python2 example.py
 ```
 
-If that doesn't work, then try:
-
-```
-python2 examples/example.py
-```
-
-The test app just shows off some features of the library. To play around you can:
+The example app just shows off some features of the library. To play around you can:
 
 ```
 - right click to change the hex selection type. 
