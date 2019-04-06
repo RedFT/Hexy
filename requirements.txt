@@ -3,10 +3,7 @@ attrs==18.1.0
 funcsigs==1.0.2
 more-itertools==4.3.0
 numpy>=1.15.0
-pathlib2==2.3.2
 pluggy==0.7.1
 py==1.5.4
-pygame==1.9.4
 pytest==3.7.0
-scandir==1.7
 six==1.11.0
