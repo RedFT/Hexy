@@ -14,17 +14,6 @@ A library that makes working with a hexagonal lattice easier. Some of the inspir
 pip install hexy
 ```
 
-### Dependencies
-
-To install the dependencies run:
-```bash
-pip install -r requirements.txt
-```
-
-### Installing
-
-Just clone this repository into your project's root.
-
 ## Running the example
 
 We'll use the [HexyExamples](https://github.com/redft/hexyexamples) repo to demonstrate
