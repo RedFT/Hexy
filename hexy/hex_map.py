@@ -12,7 +12,7 @@ Key Rules:
 import numpy as np
 
 from .errors import IncorrectCoordinatesError, HexExistsError, MismatchError
-from .hexy import *
+from .hexy import cube_to_axial, SE, E
 
 # The bases of the axial coordinate system
 bases_mat = cube_to_axial(np.array([SE, E], dtype=int))
