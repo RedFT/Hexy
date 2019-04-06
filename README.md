@@ -22,7 +22,7 @@ We'll use the [HexyExamples](https://github.com/redft/hexyexamples) repo to demo
 ```
 git clone https://github.com/redft/hexyexamples
 cd hexyexamples
-pip install -r requirements.txt
+pip install -r requirements.txt # If you're not using a virtual environment, you might need to use sudo.
 python2 example.py
 ```
 
