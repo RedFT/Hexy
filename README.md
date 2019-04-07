@@ -34,6 +34,28 @@ The example app just shows off some features of the library. To play around you 
 - left click to change the starting point of the line when selection type is a line.
 ```
 
+## For developers
+
+If you're working on `setup.py` and want to check it's configured properly, you can run:
+
+```bash
+pip install -e .
+```
+
+#### Developing Tests
+
+If you're working on the tests and want to install the test dependencies:
+
+```bash
+pip install -e .[tests]
+```
+
+Then from the project's root directory:
+
+```bash
+python -m pytest
+```
+
 ## Authors
 
 * **Norbu Tsering** 
