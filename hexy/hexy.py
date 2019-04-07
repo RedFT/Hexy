@@ -64,31 +64,26 @@ def get_ring(center, radius):
 
 def get_disk(center, radius):
     """
-    Retrieves the locations of all the hexes within certain distance from a hexagon.
+    Retrieves the locations of all the hexes within `radius` hexes from a hexagon.
     :param center: The location of the hexagon to get the neighbors of.
     :param radius: The distance from `center` of the hexes we want.
     :return: An array of locations of the hexes that are within `radius` units away from `center`.
     """
-    hex_set = []
-    for x in range(-radius, radius + 1):
-        for y in range(max(-radius, -(x + radius)), min(radius + 1, -x + radius + 1)):
-            z = -x - y
-            hex_set.append(np.array([x, y, z]))
-    return np.array(hex_set) + center
+    return get_spiral(center, 0, radius)
 
 
 def get_spiral(center, radius_start=1, radius_end=2):
     """
-    Retrieves all hexes that are `radius` hexes away from the `center`.
+    Retrieves all hexes that are between `radius_start` and `radius_end` hexes away from the `center`.
     :param center: The location of the center hex.
     :param radius_start: The distance from center. We want all hexes greater than or equal to this distance.
     :param radius_end: The distance from center. We want all hexes within this distance from `center`.
     :return: An array of locations of the hexes that are within `radius` hexes away from `center`.
     """
-    hex_area = get_ring(center, 0)
-    for i in range(radius_start, radius_end + 1):
+    hex_area = get_ring(center, radius_start)
+    for i in range(radius_start + 1, radius_end + 1):
         hex_area = np.append(hex_area, get_ring(center, i), axis=0)
-    return hex_area
+    return np.array(hex_area)
 
 
 def get_hex_line(hex_start, hex_end):
