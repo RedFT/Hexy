@@ -52,6 +52,8 @@ pip install -e .[tests]
 
 #### Testing
 
+From the project's root directory, run:
+
 ```bash
 python -m pytest
 ```
