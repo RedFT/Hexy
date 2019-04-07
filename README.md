@@ -58,10 +58,6 @@ From the project's root directory, run:
 python -m pytest
 ```
 
-## Authors
-
-* **Norbu Tsering** 
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
