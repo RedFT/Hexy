@@ -50,7 +50,7 @@ If you're working on the tests and want to install the test dependencies:
 pip install -e .[tests]
 ```
 
-Then from the project's root directory:
+#### Testing
 
 ```bash
 python -m pytest
