@@ -39,9 +39,24 @@ def solve_for_indexes(hexes):
     return np.linalg.solve(bases_mat, hexes.T).T
 
 
-class HexMap(dict):
+class HexMap:
     def __init__(self):
-        super(HexMap, self).__init__()
+        self._map = {}
+
+    def keys(self):
+        yield from self._map.keys()
+
+    def values(self):
+        yield from self._map.values()
+
+    def items(self):
+        yield from self._map.items()
+
+    def __len__(self):
+        return self._map.__len__()
+
+    def __iter__(self):
+        yield from self._map
 
     def __setitem__(self, coordinates, hex_objects):
         """
@@ -56,21 +71,21 @@ class HexMap(dict):
 
         keys = make_key_from_coordinates(coordinates)
         for key, hex in zip(keys, hex_objects):
-            if key in self.keys():
+            if key in self._map.keys():
                 raise HexExistsError("key " + key + " already exists.")
 
-            super(HexMap, self).__setitem__(key, hex)
+            self._map[key] = hex
 
     def setitem_direct(self, key, value):
-        if key in self.keys():
+        if key in self._map.keys():
             raise HexExistsError("key " + key + " already exists.")
 
-        super(HexMap, self).__setitem__(key, value)
+        self._map[key] = value
 
     def overwrite_entries(self, coordinates, hex):
         keys = make_key_from_coordinates(coordinates)
         for key in keys:
-            super(HexMap, self).__setitem__(key, hex)
+            self._map[key] = hex
 
     def __delitem__(self, coordinates):
         if len(coordinates.shape) == 1:
@@ -78,7 +93,7 @@ class HexMap(dict):
         keys = make_key_from_coordinates(coordinates)
         for key in keys:
             if key in self.keys():
-                super(HexMap, self).__delitem__(key)
+                del self._map[key]
 
     def __getitem__(self, coordinates):
         """
@@ -89,8 +104,4 @@ class HexMap(dict):
         if len(coordinates.shape) == 1:
             coordinates = np.array([coordinates])
         keys = make_key_from_coordinates(coordinates)
-        hexes = []
-        for key in keys:
-            if key in self.keys():
-                hexes.append(super(HexMap, self).__getitem__(key))
-        return hexes
+        return [self._map.get(k) for k in keys if k in self._map.keys()]
