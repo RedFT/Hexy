@@ -18,6 +18,34 @@ E = np.array((1, -1, 0))
 ALL_DIRECTIONS = np.array([NW, NE, E, SE, SW, W, ])
 
 
+def radius_from_hexes(hexes):
+    """
+    Computes the radius necessary to fit a set amount of hexes in the area generated
+    by :func:`~hexy.get_spiral`.
+
+    The formula documented on https://www.redblobgames.com/grids/hexagons/#rings-spiral,
+    to find the amount of hexes for a given radius is::
+
+        1 + 3 * radius * (radius+1) = s
+
+    It is a quadratic equation that can be resolved to::
+
+        radius = (2 * ((-s + 1) / 3)) / (-1 - sqrt(1^2 - 4 * ((-s + 1) / 3)))
+
+    :param hexes: The amount of hexes to fit on the board.
+    :type hexes: int
+    :return: The radius of a spiral as an integer.
+    :rtype: int
+    """
+    if type(hexes) != int:
+        raise TypeError(
+            "radius_from_hexes() argument must be an integer, not {}".format(
+                type(hexes)
+            )
+        )
+    return np.ceil(np.sqrt((hexes - 1) / 3 + 1 / 4) - 1 / 2)
+
+
 def get_cube_distance(hex_start, hex_end):
     """
     Computes the smallest number of hexes between hex_start and hex_end, on the hex lattice.

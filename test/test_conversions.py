@@ -7,6 +7,13 @@ radius = 10
 coords = hx.get_spiral(np.array((0, 0, 0)), 1, 10)
 
 
+def test_hexes_amount_to_radius_conversion():
+    hexes = 1 + 3 * radius * (radius + 1)
+    found_radius = hx.radius_from_hexes(hexes)
+
+    assert found_radius == radius
+
+
 def test_axial_to_cube_conversion():
     axial_coords = hx.cube_to_axial(coords)
     cube_coords = hx.axial_to_cube(axial_coords)
