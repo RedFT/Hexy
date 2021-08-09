@@ -1,8 +1,9 @@
+import math
 import numpy as np
 
 
 # Matrix for converting axial coordinates to pixel coordinates
-axial_to_pixel_mat = np.array([[np.sqrt(3), np.sqrt(3) / 2], [0, 3 / 2.]])
+axial_to_pixel_mat = np.array([[math.sqrt(3), math.sqrt(3) / 2], [0, 3 / 2.]])
 
 # Matrix for converting pixel coordinates to axial coordinates
 pixel_to_axial_mat = np.linalg.inv(axial_to_pixel_mat)
@@ -43,7 +44,7 @@ def radius_from_hexes(hexes):
                 type(hexes)
             )
         )
-    return np.ceil(np.sqrt((hexes - 1) / 3 + 1 / 4) - 1 / 2)
+    return np.ceil(math.sqrt((hexes - 1) / 3 + 1 / 4) - 1 / 2)
 
 
 def get_cube_distance(hex_start, hex_end):
