@@ -2,7 +2,7 @@ from distutils.core import setup
 setup(
   name = 'Hexy',         
   packages = ['hexy'],   
-  version = '1.4.3',      
+  version = '1.4.4',      
   license='MIT',        
   description = 'A library that makes working with a hexagonal lattice easier.',   
   author = 'Norbu Tsering',                   
