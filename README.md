@@ -50,6 +50,12 @@ If you're working on the tests and want to install the test dependencies:
 pip install -e .[tests]
 ```
 
+If you're using `zsh` you'll have to use quotes in your command:
+
+```zsh
+pip install -e ".[tests]"
+```
+
 #### Testing
 
 From the project's root directory, run:
