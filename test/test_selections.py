@@ -47,22 +47,6 @@ def test_get_spiral():
     _assert_np_array_equal(actual_array, expected_array)
 
 
-def test_get_spiral():
-    start_radius = 2
-    end_radius = 4
-    expected = []
-    for r in range(start_radius, end_radius + 1):
-        expected += _get_linear_combinations(hx.W, hx.NW, r) + \
-                    _get_linear_combinations(hx.NW, hx.NE, r) + \
-                    _get_linear_combinations(hx.NE, hx.E, r) + \
-                    _get_linear_combinations(hx.E, hx.SE, r) + \
-                    _get_linear_combinations(hx.SE, hx.SW, r) + \
-                    _get_linear_combinations(hx.SW, hx.W, r)
-
-    actual_array = hx.get_spiral([0, 0, 0], start_radius, end_radius)
-    expected_array = np.array(expected)
-    _assert_np_array_equal(actual_array, expected_array)
-
 
 def test_get_disk():
     expected = [[0, 0, 0]]
