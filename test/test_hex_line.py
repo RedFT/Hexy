@@ -12,10 +12,10 @@ def test_get_hex_line():
     start = np.array([-3, 3, 0])
     end = np.array([1, 1, -2])
     print(hx.get_hex_line(start, end))
-    print(expected);
+    print(expected)
     assert(np.array_equal(
         hx.get_hex_line(start, end),
-        expected));
+        expected))
 
 if __name__ == "__main__":
     test_get_hex_line()
