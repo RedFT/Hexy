@@ -124,7 +124,7 @@ def get_hex_line(hex_start, hex_end): # TODO start and end seems to not be commu
     """
     hex_distance = get_cube_distance(hex_start, hex_end)
     if hex_distance < 1:
-        return hex_start.copy()
+        return np.array([hex_start.copy()])
 
     # Set up linear system to compute linearly interpolated cube points
     bottom_row = np.array([i / hex_distance for i in np.arange(hex_distance)])
