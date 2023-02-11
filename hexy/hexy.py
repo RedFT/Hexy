@@ -115,7 +115,7 @@ def get_spiral(center, radius_start=1, radius_end=2):
     return np.array(hex_area)
 
 
-def get_hex_line(hex_start, hex_end):
+def get_hex_line(hex_start, hex_end): # TODO start and end seems to not be commutative, why ?
     """
     Get hexes on line from hex_start to hex_end.
     :param hex_start: The hex where the line starts.
@@ -124,7 +124,7 @@ def get_hex_line(hex_start, hex_end):
     """
     hex_distance = get_cube_distance(hex_start, hex_end)
     if hex_distance < 1:
-        return np.array([hex_start])
+        return np.array([hex_start.copy()])
 
     # Set up linear system to compute linearly interpolated cube points
     bottom_row = np.array([i / hex_distance for i in np.arange(hex_distance)])
