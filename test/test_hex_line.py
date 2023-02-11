@@ -18,7 +18,8 @@ def test_get_hex_line():
         expected))
     # testing one hex line special case
     one_hex_line = hx.get_hex_line(start, start)
-    assert(np.array_equal(one_hex_line, start))
+    assert len(one_hex_line) == 1
+    assert(np.array_equal(one_hex_line[0], start))
     assert id(start) != id(one_hex_line)
 
 
